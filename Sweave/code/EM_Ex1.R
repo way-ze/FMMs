@@ -1,18 +1,18 @@
-## ---- myrcode1
-
 set.seed(123)
 X1 = rnorm(3000, 20, 5)
 X2 = rnorm(7000, 40, 5)
 x = c(X1, X2)
-hist(x, nclass=50, main="Histogram of sum of X1 and X2", xlab="X1 + X2")
+hist(x, nclass=10, main="Histogram of sum of X1 and X2", xlab="X1 + X2")
 
 
 # Using mixtools
-library(mixtools)
+suppressPackageStartupMessages(library(mixtools))
 par(mfrow=c(1,2))
 EMmixtool <- normalmixEM(x)
 plot(EMmixtool, density=TRUE)
+
 EMmixtool[c("lambda", "mu", "sigma")]
+
 
 # Calculating by hand
 mem <- kmeans(x,2)$cluster
@@ -21,7 +21,6 @@ mu2 <- mean(x[mem==2])
 sigma1 <- sd(x[mem==1])
 sigma2 <- sd(x[mem==2])
 pi1 <- sum(mem==1)/length(mem)
-pi2 <- sum(mem==2)/length(mem)
 
 # modified sum only considers finite values
 sum.finite <- function(x) {
@@ -60,3 +59,12 @@ while (abs(Q[k]-Q[k-1])>=1e-6) {
   k <- k + 1
   Q[k] <- sum(log(comp.sum))
 }
+
+EMmixtool["lambda"]
+c(pi2, pi1)
+
+EMmixtool["mu"]
+c(mu2, mu1)
+
+EMmixtool["sigma"]
+c(sigma2, sigma1)
